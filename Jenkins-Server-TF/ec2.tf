@@ -6,7 +6,7 @@ resource "aws_instance" "ec2" {
   vpc_security_group_ids = [aws_security_group.security-group.id]
   iam_instance_profile   = aws_iam_instance_profile.instance-profile.name
   root_block_device {
-    volume_size = 30
+    volume_size = 25
   }
   user_data = templatefile("./tools-install.sh", {})
 
