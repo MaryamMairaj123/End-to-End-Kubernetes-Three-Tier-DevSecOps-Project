@@ -5,10 +5,10 @@ pipeline {
         nodejs 'nodejs'
     }
     environment  {
-        SCANNER_HOME=tool 'sonar-scanner'
-        AWS_ACCOUNT_ID = credentials('ACCOUNT_ID')
-        AWS_ECR_REPO_NAME = credentials('ECR_REPO1')
-        AWS_DEFAULT_REGION = 'us-east-1'
+        SCANNER_HOME=tool 'sonarqube'
+        AWS_ACCOUNT_ID = credentials('AWS-ACCOUNT-ID')
+        AWS_ECR_REPO_NAME = credentials('ECR-frontend-id')
+        AWS_DEFAULT_REGION = 'eu-north-1'
         REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/"
     }
     stages {
@@ -25,8 +25,8 @@ pipeline {
         stage('Sonarqube Analysis') {
             steps {
                 dir('Application-Code/frontend') {
-                    withSonarQubeEnv('sonar-server') {
-                        sh ''' $SCANNER_HOME/bin/sonar-scanner \
+                    withSonarQubeEnv('sonarqube') {
+                        sh ''' $SCANNER_HOME/bin/sonar-token \
                         -Dsonar.projectName=three-tier-frontend \
                         -Dsonar.projectKey=three-tier-frontend '''
                     }
@@ -43,7 +43,7 @@ pipeline {
         stage('OWASP Dependency-Check Scan') {
             steps {
                 dir('Application-Code/frontend') {
-                    dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+                    dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'dependencycheck'
                     dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
                 }
             }
@@ -92,7 +92,7 @@ pipeline {
             }
             steps {
                 dir('Kubernetes-Manifests-file/Frontend') {
-                    withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+                    withCredentials([string(credentialsId: 'github', variable: 'Git-cred')]) {
                         sh '''
                             git config user.email "maryammairaj53@gmail.com"
                             git config user.name "MaryamMairaj123"
@@ -103,7 +103,7 @@ pipeline {
                             sed -i "s/${AWS_ECR_REPO_NAME}:${imageTag}/${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}/" deployment.yaml
                             git add deployment.yaml
                             git commit -m "Update deployment Image to version \${BUILD_NUMBER}"
-                            git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:master
+                            git push https://${Git-cred}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:master
                         '''
                     }
                 }
