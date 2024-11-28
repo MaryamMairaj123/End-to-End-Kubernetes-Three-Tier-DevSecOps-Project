@@ -11,7 +11,7 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-    - host: maryammairaj.study
+    - host: maryammairaj.local
       http:
         paths:
           - path: /api
