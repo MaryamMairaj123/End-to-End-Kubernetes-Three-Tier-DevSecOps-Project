@@ -11,7 +11,7 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-    - host: youtube.com
+    - host: maryammairaj.study
       http:
         paths:
           - path: /api
