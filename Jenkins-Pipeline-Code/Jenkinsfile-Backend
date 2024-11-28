@@ -102,7 +102,7 @@ pipeline {
                             sed -i "s/${AWS_ECR_REPO_NAME}:${imageTag}/${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}/" deployment.yaml
                             git add deployment.yaml
                             git commit -m "Update deployment Image to version \${BUILD_NUMBER}"
-                            git push https://MaryamMairaj123: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@github.com/MaryamMairaj123/End-to-End-Kubernetes-Three-Tier-DevSecOps-Project HEAD:main
+                            git push https://MaryamMairaj123:<PAT-TOKEN>@github.com/MaryamMairaj123/End-to-End-Kubernetes-Three-Tier-DevSecOps-Project HEAD:main
                         '''
                     }
                 }
