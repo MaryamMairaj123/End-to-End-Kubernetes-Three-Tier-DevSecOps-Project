@@ -29,6 +29,7 @@ WORKDIR /usr/src/app
 COPY --from=builder /usr/src/app /usr/src/app
 
 # Use distroless entrypoint (npm start)
+EXPOSE 3000
 CMD ["npm", "start"]
 
 
