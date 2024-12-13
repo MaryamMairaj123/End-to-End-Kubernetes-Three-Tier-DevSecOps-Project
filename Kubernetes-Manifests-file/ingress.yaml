@@ -1,3 +1,56 @@
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: mainlb
+#   namespace: three-tier
+#   annotations:
+#     alb.ingress.kubernetes.io/scheme: internet-facing
+#     alb.ingress.kubernetes.io/target-type: ip
+#     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+#     alb.ingress.kubernetes.io/subnets: "subnet-007a5e0ca8c6db2b4,subnet-0e72bbde732547118,subnet-0e4370e2b139ed788"
+# spec:
+#   ingressClassName: alb
+#   rules:
+#     - host: maryammairaj.local
+#       http:
+#         paths:
+#           - path: /api
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: api
+#                 port:
+#                   number: 3500
+#           - path: /healthz
+#             pathType: Exact
+#             backend:
+#               service:
+#                 name: api
+#                 port:
+#                   number: 3500
+#           - path: /ready
+#             pathType: Exact
+#             backend:
+#               service:
+#                 name: api
+#                 port:
+#                   number: 3500
+#           - path: /started
+#             pathType: Exact
+#             backend:
+#               service:
+#                 name: api
+#                 port:
+#                   number: 3500
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: frontend
+#                 port:
+#                   number: 3000
+
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -14,29 +67,8 @@ spec:
     - host: maryammairaj.local
       http:
         paths:
-          - path: /api
+          - path: /api*
             pathType: Prefix
-            backend:
-              service:
-                name: api
-                port:
-                  number: 3500
-          - path: /healthz
-            pathType: Exact
-            backend:
-              service:
-                name: api
-                port:
-                  number: 3500
-          - path: /ready
-            pathType: Exact
-            backend:
-              service:
-                name: api
-                port:
-                  number: 3500
-          - path: /started
-            pathType: Exact
             backend:
               service:
                 name: api
@@ -49,3 +81,4 @@ spec:
                 name: frontend
                 port:
                   number: 3000
+
